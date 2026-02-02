@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direktori Bisnis - Mojosari Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-tight">MOJOSARI<span class="text-yellow-400">HUB</span></a>
+            <a href="index.html" class="text-sm bg-blue-800 px-4 py-2 rounded-lg hover:bg-blue-600 transition">← Kembali</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 px-4 mb-20">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">📍 Direktori Lokal</h1>
+            <p class="text-gray-600">Temukan layanan dan bisnis terbaik di sekitar Mojosari.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-8">
+            <button onclick="filterDir('Semua')" class="cat-btn bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">Semua</button>
+            <button onclick="filterDir('Kuliner')" class="cat-btn bg-white text-gray-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-gray-50">Kuliner</button>
+            <button onclick="filterDir('Toko/Material')" class="cat-btn bg-white text-gray-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-gray-50">Toko</button>
+            <button onclick="filterDir('Jasa/Bengkel')" class="cat-btn bg-white text-gray-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-gray-50">Jasa</button>
+            <button onclick="filterDir('Kesehatan')" class="cat-btn bg-white text-gray-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-gray-50">Kesehatan</button>
+        </div>
+
+        <div id="full-directory-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="animate-pulse h-64 bg-gray-200 rounded-xl"></div>
+            <div class="animate-pulse h-64 bg-gray-200 rounded-xl"></div>
+            <div class="animate-pulse h-64 bg-gray-200 rounded-xl"></div>
+            <div class="animate-pulse h-64 bg-gray-200 rounded-xl"></div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-10 text-center">
+        <p>© 2026 Mojosari Hub. Semua Bisnis Lokal dalam Satu Genggaman.</p>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
+        let allData = [];
+
+        async function fetchAllDirectory() {
+            try {
+                const response = await fetch(SCRIPT_URL + "?type=directory");
+                allData = await response.json();
+                renderData(allData);
+            } catch (e) {
+                console.error("Gagal load direktori", e);
+            }
+        }
+
+        function renderData(data) {
+            let html = '';
+            if (data.length === 0) {
+                html = '<div class="col-span-full text-center py-10 text-gray-500">Belum ada data untuk kategori ini.</div>';
+            } else {
+                data.forEach(item => {
+                    html += `
+                        <div class="bg-white rounded-xl overflow-hidden shadow hover:shadow-xl transition group border border-gray-100">
+                            <div class="h-40 bg-gray-300 relative">
+                                <img src="${item.foto || 'https://via.placeholder.com/400x300'}" class="w-full h-full object-cover">
+                                <span class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded-full uppercase font-bold">Buka</span>
+                            </div>
+                            <div class="p-4">
+                                <span class="text-blue-600 text-[10px] font-bold uppercase tracking-wider">${item.jenis}</span>
+                                <h3 class="font-bold text-lg group-hover:text-blue-700 transition">${item.nama}</h3>
+                                <p class="text-yellow-500 text-sm">⭐ ${item.rating || '0'}</p>
+                                <p class="text-gray-500 text-xs mt-2 italic line-clamp-2">"${item.desc}"</p>
+                                <hr class="my-3">
+                                <a href="${item.maps}" target="_blank" class="block text-center bg-blue-50 text-blue-700 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 hover:text-white transition">
+                                    Cek Rute Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('full-directory-container').innerHTML = html;
+        }
+
+        function filterDir(category) {
+            // Update UI Tombol
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => {
+                if(btn.innerText === category) {
+                    btn.classList.replace('bg-white', 'bg-blue-600');
+                    btn.classList.replace('text-gray-600', 'text-white');
+                } else {
+                    btn.classList.replace('bg-blue-600', 'bg-white');
+                    btn.classList.replace('text-white', 'text-gray-600');
+                }
+            });
+
+            // Filter Data
+            if (category === 'Semua') {
+                renderData(allData);
+            } else {
+                const filtered = allData.filter(item => item.jenis === category);
+                renderData(filtered);
+            }
+        }
+
+        window.onload = fetchAllDirectory;
+    </script>
+</body>
+</html>

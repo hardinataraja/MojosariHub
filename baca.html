@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca Berita - Mojosari Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">MOJOSARI<span class="text-yellow-400">HUB</span></a>
+            <a href="index.html" class="bg-blue-800 px-4 py-2 rounded text-sm">← Kembali</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 px-4 max-w-3xl">
+        <article id="article-content"></article>
+
+        <div id="ad-baca" class="my-10">
+            <a href="https://wa.me/682111887939" target="_blank" class="block p-6 bg-yellow-50 border-2 border-dashed border-yellow-200 rounded-xl text-center text-yellow-700">
+                <p class="text-xs font-bold uppercase">Sponsor Utama</p>
+                <p class="font-bold">Pasang Iklan Anda di Sini! (WhatsApp 082111887939)</p>
+            </a>
+        </div>
+
+        <hr class="my-10">
+        <h3 class="text-xl font-bold mb-4">📚 Arsip Berita Lainnya</h3>
+        <div id="arsip-container" class="grid grid-cols-1 gap-4 mb-20"></div>
+    </main>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
+        
+        async function loadPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const judulTarget = urlParams.get('judul');
+            const res = await fetch(SCRIPT_URL + "?type=trending");
+            const data = await res.json();
+            
+            const art = data.find(i => i.judul === judulTarget);
+            if(art){
+                document.getElementById('article-content').innerHTML = `<h1 class="text-3xl font-bold mb-4">${art.judul}</h1><img src="${art.gambar}" class="w-full rounded-xl mb-6"><div class="text-lg leading-relaxed text-gray-700">${art.isi.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            // Load Arsip
+            let arsipHtml = '';
+            data.filter(i => i.judul !== judulTarget).slice(0, 5).forEach(i => {
+                arsipHtml += `<div onclick="location.href='baca.html?judul=${encodeURIComponent(i.judul)}'" class="flex gap-4 bg-white p-3 rounded shadow cursor-pointer"><img src="${i.gambar}" class="w-16 h-16 object-cover rounded"><div><h4 class="font-bold text-sm">${i.judul}</h4></div></div>`;
+            });
+            document.getElementById('arsip-container').innerHTML = arsipHtml;
+
+            // Load Iklan
+            const resAds = await fetch(SCRIPT_URL + "?type=ads");
+            const ads = await resAds.json();
+            if(ads.Baca_Bawah) {
+                document.getElementById('ad-baca').innerHTML = `<a href="${ads.Baca_Bawah.link}" target="_blank"><img src="${ads.Baca_Bawah.image}" class="w-full rounded-xl shadow-lg"></a>`;
+            }
+        }
+        window.onload = loadPage;
+    </script>
+</body>
+</html>

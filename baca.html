@@ -3,60 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baca Berita - Mojosari Hub</title>
+    
+    <title id="meta-title">Baca Berita - Mojosari Hub</title>
+    <meta property="og:type" content="article">
+    <meta property="og:title" id="og-title" content="Mojosari Hub - Portal Berita Lokal">
+    <meta property="og:description" id="og-desc" content="Informasi terkini dan direktori bisnis di wilayah Mojosari.">
+    <meta property="og:image" id="og-image" content="https://mojosarihub.com/default-preview.jpg">
+    <meta property="og:url" id="og-url" content="">
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .share-btn:hover { transform: translateY(-2px); }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans text-slate-900">
     <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold">MOJOSARI<span class="text-yellow-400">HUB</span></a>
-            <a href="index.html" class="bg-blue-800 px-4 py-2 rounded text-sm">← Kembali</a>
+            <a href="index.html" class="text-2xl font-bold tracking-tight uppercase">MOJOSARI<span class="text-yellow-400">HUB</span></a>
+            <a href="index.html" class="bg-blue-800 px-4 py-2 rounded-lg text-sm font-bold shadow-inner">← Kembali</a>
         </div>
     </header>
 
-    <main class="container mx-auto mt-8 px-4 max-w-3xl">
-        <article id="article-content"></article>
+    <main class="container mx-auto mt-8 px-4 max-w-3xl mb-24">
+        <article id="article-content">
+            <div class="animate-pulse flex flex-col gap-4">
+                <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-64 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded w-full"></div>
+            </div>
+        </article>
 
-        <div id="ad-baca" class="my-10">
-            <a href="https://wa.me/682111887939" target="_blank" class="block p-6 bg-yellow-50 border-2 border-dashed border-yellow-200 rounded-xl text-center text-yellow-700">
-                <p class="text-xs font-bold uppercase">Sponsor Utama</p>
-                <p class="font-bold">Pasang Iklan Anda di Sini! (WhatsApp 082111887939)</p>
-            </a>
+        <div class="flex flex-col sm:flex-row items-center gap-4 my-10 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <div class="text-center sm:text-left">
+                <p class="text-xs font-black text-blue-600 uppercase tracking-widest mb-1">Ayo Viralkan!</p>
+                <p class="text-sm text-gray-500 font-medium">Bagikan info ini ke warga Mojosari lainnya</p>
+            </div>
+            <div class="flex gap-3 ml-auto">
+                <button onclick="shareFB()" class="share-btn flex items-center gap-2 bg-[#1877F2] text-white px-5 py-3 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-100">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Facebook
+                </button>
+                <button onclick="shareWA()" class="share-btn flex items-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-2xl text-sm font-bold transition shadow-lg shadow-green-100">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.27 9.27 0 01-4.487-1.159l-.323-.192-3.33.874.889-3.243-.21-.334a9.272 9.272 0 01-1.428-4.94c0-5.11 4.154-9.264 9.265-9.264 2.476 0 4.804.965 6.554 2.716a9.204 9.204 0 012.712 6.55c0 5.113-4.155 9.267-9.267 9.267m9.065-17.74a10.911 10.911 0 00-7.744-3.207c-6.042 0-10.957 4.916-10.958 10.958 0 1.93.493 3.813 1.43 5.498L3.083 21.6l4.244-1.113a10.925 10.925 0 005.42 1.431h.005c6.043 0 10.958-4.917 10.958-10.959a10.89 10.89 0 00-3.201-7.734"/></svg>
+                    WhatsApp
+                </button>
+            </div>
         </div>
 
-        <hr class="my-10">
-        <h3 class="text-xl font-bold mb-4">📚 Arsip Berita Lainnya</h3>
-        <div id="arsip-container" class="grid grid-cols-1 gap-4 mb-20"></div>
+        <div id="ad-baca" class="my-10">
+            <div class="animate-pulse h-32 bg-gray-100 rounded-xl"></div>
+        </div>
+
+        <hr class="border-gray-200 my-10">
+        
+        <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 italic">📚 Baca Juga</h3>
+        <div id="arsip-container" class="grid grid-cols-1 gap-4 mb-20">
+            </div>
     </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-8 text-center text-xs border-t-4 border-yellow-400">
+        <p class="font-bold text-white mb-2">MOJOSARI HUB</p>
+        <p>© 2026 Portal Informasi Terpadu Mojosari</p>
+    </footer>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
         
         async function loadPage() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const judulTarget = urlParams.get('judul');
-            const res = await fetch(SCRIPT_URL + "?type=trending");
-            const data = await res.json();
-            
-            const art = data.find(i => i.judul === judulTarget);
-            if(art){
-                document.getElementById('article-content').innerHTML = `<h1 class="text-3xl font-bold mb-4">${art.judul}</h1><img src="${art.gambar}" class="w-full rounded-xl mb-6"><div class="text-lg leading-relaxed text-gray-700">${art.isi.replace(/\n/g, '<br>')}</div>`;
-            }
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const judulTarget = urlParams.get('judul');
+                const res = await fetch(SCRIPT_URL + "?type=trending");
+                const data = await res.json();
+                
+                const art = data.find(i => i.judul === judulTarget);
+                if(art){
+                    // Update Konten HTML
+                    document.getElementById('article-content').innerHTML = `
+                        <div class="mb-4">
+                            <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded font-black uppercase tracking-widest">${art.kategori}</span>
+                        </div>
+                        <h1 class="text-3xl md:text-4xl font-black leading-tight text-slate-900 mb-6">${art.judul}</h1>
+                        <img src="${art.gambar}" class="w-full rounded-3xl shadow-2xl mb-8 object-cover max-h-[450px]">
+                        <div class="text-lg leading-relaxed text-slate-700 space-y-4">
+                            ${art.isi.split('\n').map(p => `<p>${p}</p>`).join('')}
+                        </div>
+                    `;
 
-            // Load Arsip
-            let arsipHtml = '';
-            data.filter(i => i.judul !== judulTarget).slice(0, 5).forEach(i => {
-                arsipHtml += `<div onclick="location.href='baca.html?judul=${encodeURIComponent(i.judul)}'" class="flex gap-4 bg-white p-3 rounded shadow cursor-pointer"><img src="${i.gambar}" class="w-16 h-16 object-cover rounded"><div><h4 class="font-bold text-sm">${i.judul}</h4></div></div>`;
-            });
-            document.getElementById('arsip-container').innerHTML = arsipHtml;
+                    // Update Meta Tags Dinamis (Untuk Share)
+                    document.title = `${art.judul} - Mojosari Hub`;
+                    document.getElementById('og-title').content = art.judul;
+                    document.getElementById('og-image').content = art.gambar;
+                    document.getElementById('og-url').content = window.location.href;
+                }
 
-            // Load Iklan
-            const resAds = await fetch(SCRIPT_URL + "?type=ads");
-            const ads = await resAds.json();
-            if(ads.Baca_Bawah) {
-                document.getElementById('ad-baca').innerHTML = `<a href="${ads.Baca_Bawah.link}" target="_blank"><img src="${ads.Baca_Bawah.image}" class="w-full rounded-xl shadow-lg"></a>`;
-            }
+                // Load Arsip (Berita selain yang sedang dibaca)
+                let arsipHtml = '';
+                data.filter(i => i.judul !== judulTarget).slice(0, 5).forEach(i => {
+                    arsipHtml += `
+                    <div onclick="location.href='baca.html?judul=${encodeURIComponent(i.judul)}'" class="flex gap-4 bg-white p-3 rounded-2xl shadow-sm hover:shadow-md cursor-pointer transition border border-gray-100 items-center">
+                        <img src="${i.gambar}" class="w-20 h-20 object-cover rounded-xl shadow-inner">
+                        <div>
+                            <span class="text-blue-500 text-[10px] font-bold uppercase">${i.kategori}</span>
+                            <h4 class="font-bold text-slate-800 text-sm leading-snug line-clamp-2">${i.judul}</h4>
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('arsip-container').innerHTML = arsipHtml;
+
+                // Load Iklan Khusus Halaman Baca
+                const resAds = await fetch(SCRIPT_URL + "?type=ads");
+                const ads = await resAds.json();
+                if(ads.Baca_Bawah) {
+                    document.getElementById('ad-baca').innerHTML = `
+                        <a href="${ads.Baca_Bawah.link}" target="_blank" class="block group">
+                            <img src="${ads.Baca_Bawah.image}" class="w-full rounded-2xl shadow-lg group-hover:opacity-90 transition">
+                        </a>`;
+                }
+            } catch (e) { console.error(e); }
         }
+
+        // Fungsi Share
+        function shareFB() {
+            const url = window.location.href;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareWA() {
+            const url = window.location.href;
+            const text = `Wajib baca nih! Info terbaru dari Mojosari: ${url}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
         window.onload = loadPage;
     </script>
 </body>

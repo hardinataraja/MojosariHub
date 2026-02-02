@@ -21,36 +21,28 @@
     <section class="container mx-auto mt-6 px-4">
         <h2 class="text-xl font-bold mb-4 border-l-4 border-red-600 pl-3 uppercase tracking-wide">🔥 Terkini di Mojosari</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div id="headline-container" class="md:col-span-2 relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-gray-200 cursor-pointer group">
-                </div>
-            <div id="news-list-container" class="space-y-4">
-                </div>
+            <div id="headline-container" class="md:col-span-2 relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-gray-200 cursor-pointer group"></div>
+            
+            <div id="news-list-container" class="space-y-4"></div>
         </div>
     </section>
 
-    <div id="ad-home" class="container mx-auto mt-10 px-4">
-        <a href="https://wa.me/6282111887939" target="_blank" class="block w-full p-8 bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl text-center group hover:bg-blue-100 transition">
-            <p class="text-blue-400 text-xs font-bold uppercase mb-1 tracking-widest text-center">Ruang Sponsor</p>
-            <p class="text-blue-700 font-bold text-lg group-hover:scale-105 transition transform text-center">Iklankan Bisnis Anda di Sini</p>
-        </a>
-    </div>
+    <div id="ad-home" class="container mx-auto mt-10 px-4"></div>
 
     <section class="container mx-auto mt-12 px-4 mb-24">
         <div class="flex justify-between items-end mb-6">
             <div>
-                <h2 class="text-xl font-bold border-l-4 border-blue-600 pl-3 uppercase tracking-wide text-center">📍 Rekomendasi Bisnis</h2>
-                <p class="text-gray-500 text-sm ml-4">Layanan terbaik dengan rating tertinggi di Mojosari</p>
+                <h2 class="text-xl font-bold border-l-4 border-blue-600 pl-3 uppercase tracking-wide">📍 Rekomendasi Bisnis</h2>
+                <p class="text-gray-500 text-sm ml-4 shadow-sm">Layanan terbaik dengan rating tertinggi di Mojosari</p>
             </div>
             <a href="direktori.html" class="text-blue-600 text-sm font-bold hover:text-blue-800 underline">Lihat Semua →</a>
         </div>
-        <div id="directory-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            </div>
+        <div id="directory-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
     </section>
 
     <footer class="bg-slate-800 text-slate-400 py-10 text-center text-sm border-t-4 border-yellow-400">
         <div class="container mx-auto px-4">
             <p class="mb-2 font-bold text-white text-lg">MOJOSARI HUB</p>
-            <p class="mb-6 uppercase tracking-widest text-[10px]">Menghubungkan Warga, Memajukan UMKM Lokal.</p>
             <p>© 2026 Mojosari Hub. All rights reserved.</p>
         </div>
     </footer>
@@ -60,21 +52,28 @@
         
         async function loadContent() {
             try {
-                // 1. BERITA
+                // 1. LOAD BERITA
                 const resNews = await fetch(SCRIPT_URL + "?type=trending");
                 const news = await resNews.json();
+                
                 if(news.length > 0){
-                    const main = news[0];
+                    // LOGIKA HEADLINE: Cari yang kategorinya mengandung kata "Premium"
+                    let main = news.find(item => item.kategori.toLowerCase().includes("premium")) || news[0];
+                    const isPremium = main.kategori.toLowerCase().includes("premium");
+
                     document.getElementById('headline-container').onclick = () => window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
                     document.getElementById('headline-container').innerHTML = `
                         <img src="${main.gambar}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         <div class="absolute bottom-0 p-6 news-gradient w-full text-white">
-                            <span class="bg-red-600 text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold">TERKINI</span>
+                            <span class="${isPremium ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase">
+                                ${isPremium ? '⭐ SPONSORED' : 'TERKINI'}
+                            </span>
                             <h3 class="text-2xl font-bold leading-tight">${main.judul}</h3>
                         </div>`;
                     
+                    // List samping (Kecuali yang sudah jadi Headline)
                     let listHtml = '';
-                    news.slice(1, 4).forEach(item => {
+                    news.filter(item => item.judul !== main.judul).slice(0, 3).forEach(item => {
                         listHtml += `
                         <div onclick="window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 cursor-pointer transition border border-gray-100">
                             <img src="${item.gambar}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
@@ -87,44 +86,36 @@
                     document.getElementById('news-list-container').innerHTML = listHtml;
                 }
                 
-                // 2. IKLAN
+                // 2. IKLAN BANNER
                 const resAds = await fetch(SCRIPT_URL + "?type=ads");
                 const ads = await resAds.json();
                 if(ads.Beranda_Tengah) {
                     document.getElementById('ad-home').innerHTML = `<a href="${ads.Beranda_Tengah.link}" target="_blank" class="block overflow-hidden rounded-2xl shadow-lg"><img src="${ads.Beranda_Tengah.image}" class="w-full h-auto object-cover"></a>`;
                 }
 
-                // 3. DIREKTORI (Sorted by Priority/Rating)
+                // 3. DIREKTORI (Sorted by Rating/Premium)
                 const resDir = await fetch(SCRIPT_URL + "?type=directory");
                 let dir = await resDir.json();
-                
-                // URUTKAN BERDASARKAN RATING TERTINGGI
                 dir.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
 
                 let dirHtml = '';
                 dir.slice(0, 4).forEach(item => {
                     const r = parseFloat(item.rating);
-                    const isPremium = r > 5;
-                    const displayRating = isPremium ? "5.0" : item.rating;
-                    const badgeText = isPremium ? "⭐️ PREMIUM" : `⭐ ${displayRating}`;
-                    const cardStyle = isPremium ? "border-yellow-400 bg-yellow-50 shadow-yellow-100" : "border-gray-100 bg-white shadow-sm";
-
+                    const isPremiumDir = r > 5;
                     dirHtml += `
-                    <div class="rounded-2xl shadow-sm hover:shadow-xl transition group border-2 ${cardStyle} flex flex-col h-full overflow-hidden">
+                    <div class="rounded-2xl shadow-sm hover:shadow-xl transition group border-2 ${isPremiumDir ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} flex flex-col h-full overflow-hidden text-center">
                         <div class="relative h-44 overflow-hidden">
                             <img src="${item.foto}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                             <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm uppercase italic">
-                                ${badgeText}
+                                ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + item.rating}
                             </div>
                         </div>
-                        <div class="p-4 flex flex-col flex-grow text-center">
+                        <div class="p-4 flex flex-col flex-grow">
                             <span class="text-blue-500 text-[10px] font-extrabold uppercase tracking-widest">${item.jenis}</span>
                             <h3 class="font-bold text-slate-800 text-lg mb-1 group-hover:text-blue-700 transition">${item.nama}</h3>
                             <p class="text-gray-500 text-xs mb-4 line-clamp-2 italic leading-relaxed">"${item.desc}"</p>
                             <div class="mt-auto">
-                                <a href="${item.maps}" target="_blank" class="block text-center ${isPremium ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2.5 rounded-xl text-xs font-bold hover:opacity-80 transition duration-300 uppercase tracking-tighter">
-                                    Petunjuk Lokasi
-                                </a>
+                                <a href="${item.maps}" target="_blank" class="block text-center ${isPremiumDir ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2.5 rounded-xl text-xs font-bold hover:opacity-80 transition duration-300">PETUNJUK LOKASI</a>
                             </div>
                         </div>
                     </div>`;

@@ -29,14 +29,12 @@
             <h2 class="text-2xl font-black text-slate-800 uppercase italic leading-tight">Direktori Bisnis & Layanan</h2>
             <p class="text-gray-500 text-sm">Temukan tempat terbaik untuk segala kebutuhan Anda di wilayah Mojosari.</p>
         </div>
-
         <div id="category-tabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-6 sticky top-16 bg-gray-50 z-40">
-            <button onclick="filterDir('Semua')" class="tab-btn active bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md transition">Semua</button>
+            <button class="tab-btn active bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md transition">Semua</button>
         </div>
-
         <div id="full-directory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="col-span-full py-20 flex flex-col items-center">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-10 w-10 mb-4"></div>
+                <div class="loader h-10 w-10 mb-4 rounded-full border-4 border-t-4 border-gray-200"></div>
                 <p class="text-gray-400 text-xs font-bold uppercase tracking-widest animate-pulse">Menghubungkan Database...</p>
             </div>
         </div>
@@ -56,18 +54,12 @@
                     fetch(SCRIPT_URL + "?type=directory"),
                     fetch(SCRIPT_URL + "?type=ads")
                 ]);
-                
                 allData = await resDir.json();
                 const ads = await resAds.json();
-                
                 allData.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
-
                 renderTabs();
                 renderCards(allData, ads.Baca_Bawah);
-
-            } catch (e) {
-                document.getElementById('full-directory').innerHTML = "<p class='text-center col-span-full py-10 text-red-500'>Koneksi terputus. Silakan muat ulang halaman.</p>";
-            }
+            } catch (e) { console.log(e); }
         }
 
         function renderTabs() {
@@ -83,14 +75,11 @@
         function filterDir(category) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.innerText === category) {
-                    btn.classList.add('bg-blue-600', 'text-white');
-                    btn.classList.remove('bg-white', 'text-slate-600');
+                    btn.classList.add('bg-blue-600', 'text-white'); btn.classList.remove('bg-white', 'text-slate-600');
                 } else {
-                    btn.classList.remove('bg-blue-600', 'text-white');
-                    btn.classList.add('bg-white', 'text-slate-600');
+                    btn.classList.remove('bg-blue-600', 'text-white'); btn.classList.add('bg-white', 'text-slate-600');
                 }
             });
-
             const filtered = category === 'Semua' ? allData : allData.filter(item => item.jenis === category);
             renderCards(filtered);
         }
@@ -98,57 +87,42 @@
         function renderCards(data, sponsorAd = null) {
             let html = '';
             data.forEach((item, index) => {
-                // LOGIKA ANTI-TANGGAL & PEMBERSIH DATA
-                let rawRating = String(item.rating || "0").replace(',', '.').trim();
-                let r = parseFloat(rawRating) || 0;
+                // LOGIKA PERBAIKAN DESIMAL & ANTI-TANGGAL
+                let raw = String(item.rating || "0").replace(',', '.').trim();
+                let r = parseFloat(raw) || 0;
                 
-                // Jika angka sangat besar (efek salah format tanggal di Sheets), paksa jadi rating normal
-                if (r > 10) r = 4.0;
+                // Proteksi Format Tanggal
+                if (r > 10) { 
+                    let firstDigit = raw.substring(0, 1);
+                    r = (firstDigit === "4" || firstDigit === "5") ? parseFloat(firstDigit + ".7") : 4.5;
+                }
 
                 const isPremium = r > 5.0; 
                 const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r}`;
                 const cardStyle = isPremium ? "ring-2 ring-yellow-400 bg-yellow-50 shadow-xl" : "bg-white shadow-md border-gray-100";
 
                 if (index === 3 && sponsorAd) {
-                    html += `
-                    <div class="col-span-full bg-slate-900 rounded-3xl p-1 overflow-hidden shadow-2xl my-4">
-                        <a href="${sponsorAd.link}" target="_blank">
-                            <img src="${sponsorAd.image}" class="w-full h-auto rounded-2xl object-cover opacity-90 hover:opacity-100 transition">
-                            <div class="p-4 text-center">
-                                <span class="text-[10px] text-yellow-500 font-black tracking-[0.2em] uppercase">Rekomendasi Sponsor</span>
-                            </div>
-                        </a>
-                    </div>`;
+                    html += `<div class="col-span-full bg-slate-900 rounded-3xl p-1 overflow-hidden shadow-2xl my-4"><a href="${sponsorAd.link}" target="_blank"><img src="${sponsorAd.image}" class="w-full h-auto rounded-2xl opacity-90 hover:opacity-100 transition"><div class="p-4 text-center"><span class="text-[10px] text-yellow-500 font-black uppercase">Rekomendasi Sponsor</span></div></a></div>`;
                 }
 
                 html += `
                 <div class="rounded-3xl overflow-hidden transition transform hover:-translate-y-1 ${cardStyle} flex flex-col h-full group">
                     <div class="relative h-52 overflow-hidden">
                         <img src="${item.foto}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-black text-blue-700 shadow-sm uppercase italic">
-                            ${badgeText}
-                        </div>
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-black text-blue-700 shadow-sm uppercase italic">${badgeText}</div>
                     </div>
                     <div class="p-6 flex flex-col flex-grow text-left">
                         <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-1">${item.jenis}</span>
                         <h3 class="font-extrabold text-xl text-slate-800 mb-2 leading-tight">${item.nama}</h3>
                         <p class="text-gray-500 text-sm italic mb-6 leading-relaxed">"${item.desc}"</p>
-                        
                         <div class="mt-auto">
-                            <a href="${item.maps}" target="_blank" class="w-full flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                BUKALOKASI (MAPS)
-                            </a>
+                            <a href="${item.maps}" target="_blank" class="w-full flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition">BUKALOKASI (MAPS)</a>
                         </div>
                     </div>
                 </div>`;
             });
-            document.getElementById('full-directory').innerHTML = html || "<p class='col-span-full py-20 text-center text-gray-400'>Tidak ada bisnis di kategori ini.</p>";
+            document.getElementById('full-directory').innerHTML = html;
         }
-
         window.onload = loadAllDirectory;
     </script>
 </body>

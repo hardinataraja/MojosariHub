@@ -8,7 +8,6 @@
     <style>
         .news-gradient { background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%); }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        /* Animasi Spinner */
         .loader { border-top-color: #3498db; animation: spinner 0.6s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -33,7 +32,6 @@
             <div id="headline-container" class="md:col-span-2 relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-gray-200 cursor-pointer group">
                 <div class="absolute inset-0 flex items-center justify-center text-gray-400 italic text-sm">Memuat Berita...</div>
             </div>
-            
             <div id="news-list-container" class="space-y-4 text-center">
                  <p class="text-gray-300 text-xs py-10 italic">Menyiapkan list berita...</p>
             </div>
@@ -55,8 +53,6 @@
             <a href="direktori.html" class="text-blue-600 text-sm font-bold hover:text-blue-800 underline">Lihat Semua →</a>
         </div>
         <div id="directory-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
-            <div class="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
             <div class="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
             <div class="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>
         </div>
@@ -87,14 +83,11 @@
                 if(news && news.length > 0){
                     let main = news.find(item => item.kategori.toLowerCase().includes("premium")) || news[0];
                     const isPremium = main.kategori.toLowerCase().includes("premium");
-
                     document.getElementById('headline-container').onclick = () => window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
                     document.getElementById('headline-container').innerHTML = `
                         <img src="${main.gambar}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         <div class="absolute bottom-0 p-6 news-gradient w-full text-white">
-                            <span class="${isPremium ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase">
-                                ${isPremium ? '⭐ SPONSORED' : 'TERKINI'}
-                            </span>
+                            <span class="${isPremium ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase">${isPremium ? '⭐ SPONSORED' : 'TERKINI'}</span>
                             <h3 class="text-2xl font-bold leading-tight">${main.judul}</h3>
                         </div>`;
                     
@@ -120,13 +113,16 @@
                     dir.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
                     let dirHtml = '';
                     dir.slice(0, 4).forEach(item => {
-                        // LOGIKA ANTI-TANGGAL & PEMBERSIH DATA
-                        let rawRating = String(item.rating || "0").replace(',', '.').trim();
-                        let r = parseFloat(rawRating) || 0;
+                        // LOGIKA PERBAIKAN DESIMAL & ANTI-TANGGAL
+                        let raw = String(item.rating || "0").replace(',', '.').trim();
+                        let r = parseFloat(raw) || 0;
                         
-                        // Jika angka sangat besar (efek salah format tanggal di Sheets), paksa jadi rating normal
-                        if (r > 10) r = 4.0; 
-                        
+                        // Jika terdeteksi format tanggal (angka seri ribuan), ambil angka depan saja dan beri estimasi 4.x
+                        if (r > 10) { 
+                            let firstDigit = raw.substring(0, 1);
+                            r = (firstDigit === "4" || firstDigit === "5") ? parseFloat(firstDigit + ".7") : 4.5;
+                        }
+
                         const isPremiumDir = r > 5.0; 
                         
                         dirHtml += `
@@ -149,14 +145,11 @@
                     });
                     document.getElementById('directory-container').innerHTML = dirHtml;
                 }
-
                 const overlay = document.getElementById('loading-overlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.remove(), 500);
-
             } catch(e) { 
                 console.log(e); 
-                document.getElementById('loading-overlay').innerHTML = "<p class='text-red-500 font-bold'>Gagal memuat data. Periksa koneksi internet.</p>";
             }
         }
         window.onload = loadContent;

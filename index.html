@@ -74,7 +74,6 @@
         
         async function loadContent() {
             try {
-                // TEKNIK PARALEL: Ambil semua data sekaligus dalam satu waktu
                 const [resNews, resAds, resDir] = await Promise.all([
                     fetch(SCRIPT_URL + "?type=trending"),
                     fetch(SCRIPT_URL + "?type=ads"),
@@ -85,7 +84,6 @@
                 const ads = await resAds.json();
                 let dir = await resDir.json();
                 
-                // 1. PROSES BERITA
                 if(news && news.length > 0){
                     let main = news.find(item => item.kategori.toLowerCase().includes("premium")) || news[0];
                     const isPremium = main.kategori.toLowerCase().includes("premium");
@@ -114,24 +112,24 @@
                     document.getElementById('news-list-container').innerHTML = listHtml;
                 }
                 
-                // 2. PROSES IKLAN
                 if(ads && ads.Beranda_Tengah) {
                     document.getElementById('ad-home').innerHTML = `<a href="${ads.Beranda_Tengah.link}" target="_blank" class="block overflow-hidden rounded-2xl shadow-xl transition hover:opacity-90"><img src="${ads.Beranda_Tengah.image}" class="w-full h-auto object-cover"></a>`;
                 }
 
-                // 3. PROSES DIREKTORI
                 if(dir && dir.length > 0) {
                     dir.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
                     let dirHtml = '';
                     dir.slice(0, 4).forEach(item => {
-                        const r = parseFloat(item.rating);
-                        const isPremiumDir = r > 5;
+                        // UPDATE LOGIKA PARSING DAN PENENTUAN PREMIUM
+                        const r = parseFloat(item.rating) || 0;
+                        const isPremiumDir = r > 5.0; 
+                        
                         dirHtml += `
                         <div class="rounded-2xl shadow-sm hover:shadow-xl transition group border-2 ${isPremiumDir ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} flex flex-col h-full overflow-hidden text-center">
                             <div class="relative h-44 overflow-hidden">
                                 <img src="${item.foto}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                 <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm uppercase italic">
-                                    ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + item.rating}
+                                    ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + r}
                                 </div>
                             </div>
                             <div class="p-4 flex flex-col flex-grow">
@@ -147,7 +145,6 @@
                     document.getElementById('directory-container').innerHTML = dirHtml;
                 }
 
-                // Hapus overlay loading setelah semua data siap
                 const overlay = document.getElementById('loading-overlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.remove(), 500);

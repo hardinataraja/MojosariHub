@@ -32,7 +32,7 @@
 
         <div id="category-tabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-6 sticky top-16 bg-gray-50 z-40">
             <button onclick="filterDir('Semua')" class="tab-btn active bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md transition">Semua</button>
-            </div>
+        </div>
 
         <div id="full-directory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="col-span-full py-20 flex flex-col items-center">
@@ -48,11 +48,10 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
-        let allData = []; // Simpan data asli agar filter cepat
+        let allData = [];
 
         async function loadAllDirectory() {
             try {
-                // Ambil data direktori dan iklan secara paralel agar cepat
                 const [resDir, resAds] = await Promise.all([
                     fetch(SCRIPT_URL + "?type=directory"),
                     fetch(SCRIPT_URL + "?type=ads")
@@ -61,13 +60,9 @@
                 allData = await resDir.json();
                 const ads = await resAds.json();
                 
-                // Urutkan: Premium Partner dulu (Rating > 5)
                 allData.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
 
-                // Generate Tabs Kategori secara otomatis berdasarkan data yang ada
                 renderTabs();
-                
-                // Tampilkan data pertama kali (Semua) + Sisipkan Iklan Baca_Bawah sebagai sponsor di list
                 renderCards(allData, ads.Baca_Bawah);
 
             } catch (e) {
@@ -86,7 +81,6 @@
         }
 
         function filterDir(category) {
-            // Update UI Button Active
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if(btn.innerText === category) {
                     btn.classList.add('bg-blue-600', 'text-white');
@@ -98,18 +92,18 @@
             });
 
             const filtered = category === 'Semua' ? allData : allData.filter(item => item.jenis === category);
-            renderCards(filtered); // Re-render list
+            renderCards(filtered);
         }
 
         function renderCards(data, sponsorAd = null) {
             let html = '';
             data.forEach((item, index) => {
-                const r = parseFloat(item.rating);
-                const isPremium = r > 5;
+                // UPDATE LOGIKA PARSING DAN PENENTUAN PREMIUM
+                const r = parseFloat(item.rating) || 0;
+                const isPremium = r > 5.0; 
                 const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r}`;
                 const cardStyle = isPremium ? "ring-2 ring-yellow-400 bg-yellow-50 shadow-xl" : "bg-white shadow-md border-gray-100";
 
-                // SISIPKAN IKLAN: Muncul setelah item ke-3 (jika ada data iklan)
                 if (index === 3 && sponsorAd) {
                     html += `
                     <div class="col-span-full bg-slate-900 rounded-3xl p-1 overflow-hidden shadow-2xl my-4">
@@ -139,7 +133,7 @@
                             <a href="${item.maps}" target="_blank" class="w-full flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 11a3 3 0 11-6 0 3 3 0 016 0z\" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                                 BUKALOKASI (MAPS)
                             </a>

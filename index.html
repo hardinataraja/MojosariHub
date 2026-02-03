@@ -120,8 +120,13 @@
                     dir.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
                     let dirHtml = '';
                     dir.slice(0, 4).forEach(item => {
-                        // UPDATE LOGIKA PARSING DAN PENENTUAN PREMIUM
-                        const r = parseFloat(item.rating) || 0;
+                        // LOGIKA ANTI-TANGGAL & PEMBERSIH DATA
+                        let rawRating = String(item.rating || "0").replace(',', '.').trim();
+                        let r = parseFloat(rawRating) || 0;
+                        
+                        // Jika angka sangat besar (efek salah format tanggal di Sheets), paksa jadi rating normal
+                        if (r > 10) r = 4.0; 
+                        
                         const isPremiumDir = r > 5.0; 
                         
                         dirHtml += `

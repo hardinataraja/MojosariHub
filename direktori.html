@@ -98,8 +98,13 @@
         function renderCards(data, sponsorAd = null) {
             let html = '';
             data.forEach((item, index) => {
-                // UPDATE LOGIKA PARSING DAN PENENTUAN PREMIUM
-                const r = parseFloat(item.rating) || 0;
+                // LOGIKA ANTI-TANGGAL & PEMBERSIH DATA
+                let rawRating = String(item.rating || "0").replace(',', '.').trim();
+                let r = parseFloat(rawRating) || 0;
+                
+                // Jika angka sangat besar (efek salah format tanggal di Sheets), paksa jadi rating normal
+                if (r > 10) r = 4.0;
+
                 const isPremium = r > 5.0; 
                 const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r}`;
                 const cardStyle = isPremium ? "ring-2 ring-yellow-400 bg-yellow-50 shadow-xl" : "bg-white shadow-md border-gray-100";

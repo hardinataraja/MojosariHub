@@ -110,27 +110,27 @@
                 }
 
                 if(dir && dir.length > 0) {
-                    // LOGIKA SORTING BARU: PREMIUM SELALU DI ATAS
+                    // LOGIKA SORTING: PREMIUM SELALU DI ATAS
                     dir.sort((a, b) => {
                         let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
                         let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
-                        
                         let isAPremium = ra > 5.0;
                         let isBPremium = rb > 5.0;
-
                         if (isAPremium && !isBPremium) return -1;
                         if (!isAPremium && isBPremium) return 1;
-                        return rb - ra; // Jika sama-sama premium atau sama-sama biasa, urutkan rating
+                        return rb - ra; 
                     });
 
                     let dirHtml = '';
                     dir.slice(0, 4).forEach(item => {
                         let raw = String(item.rating || "0").replace(',', '.').trim();
                         let r = parseFloat(raw) || 0;
+                        
+                        // Proteksi data rusak format tanggal
                         if (r > 10) { 
-                            let firstDigit = raw.substring(0, 1);
-                            r = (firstDigit === "4" || firstDigit === "5") ? parseFloat(firstDigit + ".7") : 4.5;
+                            r = parseFloat(raw.substring(0, 3)) || 4.5;
                         }
+
                         const isPremiumDir = r > 5.0; 
                         
                         dirHtml += `
@@ -138,7 +138,7 @@
                             <div class="relative h-44 overflow-hidden">
                                 <img src="${item.foto}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                 <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm uppercase italic">
-                                    ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + r}
+                                    ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + r.toFixed(1)}
                                 </div>
                             </div>
                             <div class="p-4 flex flex-col flex-grow">

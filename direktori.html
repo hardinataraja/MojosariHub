@@ -57,7 +57,7 @@
                 allData = await resDir.json();
                 const ads = await resAds.json();
                 
-                // LOGIKA SORTING BARU: PREMIUM SELALU DI ATAS
+                // LOGIKA SORTING: PREMIUM SELALU DI ATAS
                 allData.sort((a, b) => {
                     let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
                     let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
@@ -100,12 +100,14 @@
             data.forEach((item, index) => {
                 let raw = String(item.rating || "0").replace(',', '.').trim();
                 let r = parseFloat(raw) || 0;
+                
+                // Proteksi data rusak format tanggal
                 if (r > 10) { 
-                    let firstDigit = raw.substring(0, 1);
-                    r = (firstDigit === "4" || firstDigit === "5") ? parseFloat(firstDigit + ".7") : 4.5;
+                    r = parseFloat(raw.substring(0, 3)) || 4.5;
                 }
+
                 const isPremium = r > 5.0; 
-                const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r}`;
+                const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r.toFixed(1)}`;
                 const cardStyle = isPremium ? "ring-2 ring-yellow-400 bg-yellow-50 shadow-xl" : "bg-white shadow-md border-gray-100";
 
                 if (index === 3 && sponsorAd) {

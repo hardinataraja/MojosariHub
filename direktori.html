@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-616XBMEMS7"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-616XBMEMS7');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Direktori Bisnis - Mojosari Hub</title>
@@ -55,11 +46,41 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
+        const ADMIN_WA = "6281234567890"; // GANTI DENGAN NOMOR WA ANDA
         let allData = [];
+        let sponsorAd = null;
 
         // FUNGSI MENCATAT VIEW
         function recordView(judul) {
             fetch(`${SCRIPT_URL}?type=incrementView&category=directory&judul=${encodeURIComponent(judul)}`, { mode: 'no-cors' });
+        }
+
+        // FUNGSI LAPORKAN UPDATE
+        function reportUpdate(namaBisnis) {
+            const msg = `Halo Admin Mojosari Hub, saya ingin melaporkan pembaruan data untuk bisnis: ${namaBisnis}.`;
+            window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // LOGIKA JAM OPERASIONAL
+        function checkStatus(jamOperasional) {
+            if (!jamOperasional || jamOperasional === "-" || jamOperasional === "") return { text: "Jam Tidak Tersedia", color: "text-gray-400" };
+            
+            try {
+                const now = new Date();
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+                const [start, end] = jamOperasional.split('-').map(t => {
+                    const [h, m] = t.split(':').map(Number);
+                    return h * 60 + m;
+                });
+
+                if (currentTime >= start && currentTime <= end) {
+                    return { text: "● Buka", color: "text-green-600" };
+                } else {
+                    return { text: "● Tutup", color: "text-red-600" };
+                }
+            } catch (e) {
+                return { text: "Cek Maps", color: "text-blue-500" };
+            }
         }
 
         async function loadAllDirectory() {
@@ -70,6 +91,7 @@
                 ]);
                 allData = await resDir.json();
                 const ads = await resAds.json();
+                sponsorAd = ads.Baca_Bawah;
                 
                 allData.sort((a, b) => {
                     let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
@@ -82,7 +104,7 @@
                 });
 
                 renderTabs();
-                renderCards(allData, ads.Baca_Bawah);
+                renderCards(allData);
             } catch (e) { console.log(e); }
         }
 
@@ -108,7 +130,7 @@
             renderCards(filtered);
         }
 
-        function renderCards(data, sponsorAd = null) {
+        function renderCards(data) {
             let html = '';
             data.forEach((item, index) => {
                 let raw = String(item.rating || "0").replace(',', '.').trim();
@@ -116,6 +138,7 @@
                 if (r > 10) r = parseFloat(raw.substring(0, 3)) || 4.5;
 
                 const isPremium = r > 5.0; 
+                const status = checkStatus(item.jam); // Ambil status jam operasional
                 const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r.toFixed(1)}`;
                 const cardStyle = isPremium ? "ring-2 ring-yellow-400 bg-yellow-50 shadow-xl" : "bg-white shadow-md border-gray-100";
 
@@ -130,15 +153,21 @@
                         <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-black text-blue-700 shadow-sm uppercase italic">${badgeText}</div>
                     </div>
                     <div class="p-6 flex flex-col flex-grow text-left">
-                        <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-1">${item.jenis}</span>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest">${item.jenis}</span>
+                            <span class="${status.color} text-[10px] font-bold uppercase">${status.text}</span>
+                        </div>
                         <h3 class="font-extrabold text-xl text-slate-800 mb-2 leading-tight">${item.nama}</h3>
                         <p class="text-gray-500 text-sm italic mb-6 leading-relaxed">"${item.desc}"</p>
-                        <div class="mt-auto flex justify-between items-center">
-                            <a href="${item.maps}" target="_blank" onclick="recordView('${item.nama.replace(/'/g, "\\'")}')" class="flex-grow flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition mr-3">BUKALOKASI (MAPS)</a>
-                            <div class="text-right">
-                                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Dilihat</p>
-                                <p class="text-xs font-black text-slate-700">${item.views || 0}</p>
+                        <div class="mt-auto flex flex-col gap-3">
+                            <div class="flex justify-between items-center">
+                                <a href="${item.maps}" target="_blank" onclick="recordView('${item.nama.replace(/'/g, "\\'")}')" class="flex-grow flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition mr-3 uppercase">Buka Lokasi</a>
+                                <div class="text-right">
+                                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Dilihat</p>
+                                    <p class="text-xs font-black text-slate-700">${item.views || 0}</p>
+                                </div>
                             </div>
+                            <button onclick="reportUpdate('${item.nama.replace(/'/g, "\\'")}')" class="w-full text-[10px] text-gray-400 hover:text-red-500 transition font-bold uppercase tracking-widest border-t pt-3">⚠️ Laporkan Update Data</button>
                         </div>
                     </div>
                 </div>`;

@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- Developer Signature -->
-<meta name="developer" content="Musa Ababil">
-<meta name="portfolio" content="https://portofolio-musa.vercel.app">
-<meta name="author" content="Musa Ababil - portofolio-musa.vercel.app">
-    <!-- Favicon MojosariHub -->
-<link rel="icon" type="image/png" href="/logo-mojosarihub.png">
-<link rel="shortcut icon" href="/logo-mojosarihub.png">
-<link rel="apple-touch-icon" href="/logo-mojosarihub.png">
-    <!-- Open Graph Logo -->
-<meta property="og:image" content="https://mojosarihub.com/logo-mojosarihub.png">
-<meta property="og:type" content="website">
+    <meta name="developer" content="Musa Ababil">
+    <meta name="portfolio" content="https://portofolio-musa.vercel.app">
+    <meta name="author" content="Musa Ababil - portofolio-musa.vercel.app">
+    <link rel="icon" type="image/png" href="/logo-mojosarihub.png">
+    <link rel="shortcut icon" href="/logo-mojosarihub.png">
+    <link rel="apple-touch-icon" href="/logo-mojosarihub.png">
+    <meta property="og:image" content="https://mojosarihub.com/logo-mojosarihub.png">
+    <meta property="og:type" content="website">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mojosari Hub - Info Lokal & Direktori</title>
@@ -31,10 +28,9 @@
     </div>
 
     <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
+        <div class="container mx-auto flex justify-center items-center">
             <a href="index.html" class="text-2xl font-bold tracking-tight uppercase">MOJOSARI<span class="text-yellow-400">HUB</span></a>
-            <a href="https://wa.me/6282111887939" target="_blank" class="bg-yellow-500 text-blue-900 px-4 py-2 rounded-lg font-bold text-sm shadow-md hover:bg-yellow-400 transition">Lapor Warga</a>
-        </div>
+            </div>
     </header>
 
     <section class="container mx-auto mt-6 px-4">
@@ -79,7 +75,6 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
         
-        // FUNGSI BARU: MENCATAT VIEWS
         function recordView(category, judul) {
             fetch(`${SCRIPT_URL}?type=incrementView&category=${category}&judul=${encodeURIComponent(judul)}`, { mode: 'no-cors' });
         }
@@ -101,7 +96,7 @@
                     const isPremium = main.kategori.toLowerCase().includes("premium");
                     
                     document.getElementById('headline-container').onclick = () => {
-                        recordView('trending', main.judul); // Catat View
+                        recordView('trending', main.judul);
                         window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
                     };
 

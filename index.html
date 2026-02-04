@@ -109,7 +109,6 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(judul + ' - Baca di: ' + url)}`, '_blank');
         }
 
-        // Fungsi Filter Berita
         function filterNews(cat, element) {
             document.querySelectorAll('#category-nav span').forEach(s => s.classList.remove('cat-active', 'text-blue-600'));
             element.classList.add('cat-active');
@@ -126,7 +125,8 @@
             if(data.length === 0) {
                 listHtml = `<p class="text-gray-400 text-xs py-10 italic">Belum ada berita di kategori ini.</p>`;
             } else {
-                data.slice(0, 6).forEach(item => {
+                // Dibatasi hanya 3 berita agar tidak panjang ke bawah
+                data.slice(0, 3).forEach(item => {
                     listHtml += `
                     <div class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 transition border border-gray-100 text-left relative group">
                         <div onclick="recordView('trending', '${item.judul.replace(/'/g, "\\'")}'); window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="flex gap-4 cursor-pointer flex-grow">
@@ -180,17 +180,26 @@
                 }
 
                 function renderDir(data) {
+                    // SORTING: Pastikan Premium (Rating > 5) muncul paling atas
+                    data.sort((a, b) => {
+                        let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
+                        let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
+                        return rb - ra;
+                    });
+
                     let h = '';
+                    // Tampilkan hanya 4 bisnis terbaik/premium di halaman utama
                     data.slice(0, 4).forEach(item => {
                         let r = parseFloat(String(item.rating).replace(',','.')) || 4.5;
-                        h += `<div class="rounded-2xl shadow-sm border-2 ${r > 5 ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} overflow-hidden flex flex-col h-full text-center">
+                        const isPrem = r > 5.0;
+                        h += `<div class="rounded-2xl shadow-sm border-2 ${isPrem ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} overflow-hidden flex flex-col h-full text-center">
                             <img src="${item.foto}" class="h-44 w-full object-cover">
                             <div class="p-4 flex-grow flex flex-col">
                                 <span class="text-blue-500 text-[10px] font-extrabold uppercase">${item.jenis}</span>
                                 <h3 class="font-bold text-slate-800 text-lg mb-1">${item.nama}</h3>
                                 <p class="text-gray-500 text-xs mb-4 line-clamp-2 italic">"${item.desc}"</p>
                                 <div class="mt-auto flex justify-between items-center">
-                                    <a href="${item.maps}" target="_blank" class="flex-grow text-center ${r > 5 ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2 rounded-xl text-xs font-bold mr-2">MAPS</a>
+                                    <a href="${item.maps}" target="_blank" class="flex-grow text-center ${isPrem ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2 rounded-xl text-xs font-bold mr-2">MAPS</a>
                                     <span class="text-[9px] text-gray-400 font-bold whitespace-nowrap">👁️ ${item.views || 0}</span>
                                 </div>
                             </div>

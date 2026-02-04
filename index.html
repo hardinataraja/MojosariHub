@@ -18,6 +18,9 @@
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .loader { border-top-color: #3498db; animation: spinner 0.6s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .cat-active { color: #1d4ed8; border-bottom: 2px solid #1d4ed8; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-slate-900">
@@ -30,8 +33,7 @@
     <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-tight uppercase">MOJOSARI<span class="text-yellow-400">HUB</span></a>
-            
-            <a href="https://www.facebook.com/share/g/17zaiMSysH/" target="_blank" title="Gabung Grup Facebook" class="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition duration-300 flex items-center gap-2 px-3">
+            <a href="https://www.facebook.com/share/g/17zaiMSysH/" target="_blank" class="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition duration-300 flex items-center gap-2 px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
@@ -40,8 +42,17 @@
         </div>
     </header>
 
+    <nav class="bg-white border-b sticky top-[64px] z-40 overflow-x-auto no-scrollbar">
+        <div id="category-nav" class="container mx-auto flex whitespace-nowrap px-4 py-3 gap-8 text-xs font-bold uppercase tracking-wider text-slate-500 cursor-pointer">
+            <span onclick="filterNews('all', this)" class="cat-active pb-1">Semua Berita</span>
+            <span onclick="filterNews('event kota', this)" class="hover:text-blue-600 transition">Event & Kuliner</span>
+            <span onclick="filterNews('lowongan kerja', this)" class="hover:text-blue-600 transition">Lowongan Kerja</span>
+            <span onclick="filterNews('info layanan', this)" class="hover:text-blue-600 transition">Info Layanan</span>
+        </div>
+    </nav>
+
     <section class="container mx-auto mt-6 px-4">
-        <h2 class="text-xl font-bold mb-4 border-l-4 border-red-600 pl-3 uppercase tracking-wide">🔥 Terkini di Mojosari</h2>
+        <h2 id="section-title" class="text-xl font-bold mb-4 border-l-4 border-red-600 pl-3 uppercase tracking-wide">🔥 Terkini di Mojosari</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div id="headline-container" class="md:col-span-2 relative h-64 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-gray-200 cursor-pointer group">
                 <div class="absolute inset-0 flex items-center justify-center text-gray-400 italic text-sm">Memuat Berita...</div>
@@ -52,8 +63,14 @@
         </div>
     </section>
 
-    <div id="ad-home" class="container mx-auto mt-10 px-4">
-        <div class="w-full h-24 bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 text-xs font-bold uppercase tracking-widest">
+    <div class="container mx-auto mt-10 px-4">
+        <div class="relative mb-6">
+            <input type="text" id="biz-search" placeholder="Cari layanan, toko, atau kuliner di Mojosari..." class="w-full bg-white border-2 border-slate-200 py-4 pl-12 pr-4 rounded-2xl shadow-sm focus:border-blue-500 outline-none transition text-sm">
+            <svg class="absolute left-4 top-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        <div id="ad-home" class="w-full h-24 bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 text-xs font-bold uppercase tracking-widest">
             Slot Iklan Mojosari Hub
         </div>
     </div>
@@ -62,7 +79,7 @@
         <div class="flex justify-between items-end mb-6">
             <div>
                 <h2 class="text-xl font-bold border-l-4 border-blue-600 pl-3 uppercase tracking-wide">📍 Rekomendasi Bisnis</h2>
-                <p class="text-gray-500 text-sm ml-4 shadow-sm text-xs">Layanan terbaik di Mojosari</p>
+                <p class="text-gray-500 text-sm ml-4 shadow-sm text-xs text-[10px]">Layanan terbaik di Mojosari</p>
             </div>
             <a href="direktori.html" class="text-blue-600 text-sm font-bold hover:text-blue-800 underline">Lihat Semua →</a>
         </div>
@@ -75,25 +92,58 @@
     <footer class="bg-slate-800 text-slate-400 py-10 text-center text-sm border-t-4 border-yellow-400">
         <div class="container mx-auto px-4">
             <p class="mb-2 font-bold text-white text-lg uppercase tracking-tighter">MOJOSARI HUB</p>
-            <p class="mb-4 italic">Gabung bersama ribuan warga Mojosari lainnya di sosial media kami</p>
-            
-            <div class="flex justify-center mb-6 text-white">
-                <a href="https://www.facebook.com/share/g/17zaiMSysH/" target="_blank" class="hover:text-blue-400 transition transform hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/>
-                    </svg>
-                </a>
-            </div>
-            
             <p>© 2026 Mojosari Hub. Portal Informasi Warga.</p>
         </div>
     </footer>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
-        
+        let allNewsData = [];
+
         function recordView(category, judul) {
             fetch(`${SCRIPT_URL}?type=incrementView&category=${category}&judul=${encodeURIComponent(judul)}`, { mode: 'no-cors' });
+        }
+
+        function shareWA(judul) {
+            const url = `https://mojosarihub.com/baca.html?judul=${encodeURIComponent(judul)}`;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(judul + ' - Baca di: ' + url)}`, '_blank');
+        }
+
+        // Fungsi Filter Berita
+        function filterNews(cat, element) {
+            document.querySelectorAll('#category-nav span').forEach(s => s.classList.remove('cat-active', 'text-blue-600'));
+            element.classList.add('cat-active');
+            
+            const filtered = cat === 'all' ? allNewsData : allNewsData.filter(n => n.kategori.toLowerCase().includes(cat.toLowerCase()));
+            const sectionTitle = document.getElementById('section-title');
+            sectionTitle.innerText = cat === 'all' ? '🔥 Terkini di Mojosari' : `📂 ${cat.toUpperCase()}`;
+
+            renderNewsList(filtered);
+        }
+
+        function renderNewsList(data) {
+            let listHtml = '';
+            if(data.length === 0) {
+                listHtml = `<p class="text-gray-400 text-xs py-10 italic">Belum ada berita di kategori ini.</p>`;
+            } else {
+                data.slice(0, 6).forEach(item => {
+                    listHtml += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 transition border border-gray-100 text-left relative group">
+                        <div onclick="recordView('trending', '${item.judul.replace(/'/g, "\\'")}'); window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="flex gap-4 cursor-pointer flex-grow">
+                            <img src="${item.gambar}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                            <div class="flex flex-col justify-center pr-8">
+                                <span class="text-blue-600 text-[10px] font-bold uppercase tracking-tighter">${item.kategori}</span>
+                                <h4 class="font-bold text-sm leading-snug line-clamp-2 text-slate-800">${item.judul}</h4>
+                                <p class="text-[9px] text-gray-400 mt-1 uppercase font-bold tracking-widest">⏱️ 2 mnt baca • 👁️ ${item.views || 0}</p>
+                            </div>
+                        </div>
+                        <button onclick="shareWA('${item.judul.replace(/'/g, "\\'")}')" class="absolute right-3 top-1/2 -translate-y-1/2 bg-green-500 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.06 3.973L0 16l4.104-1.076A7.858 7.858 0 0 0 7.994 16c4.367 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                        </button>
+                    </div>`;
+                });
+            }
+            document.getElementById('news-list-container').innerHTML = listHtml;
         }
 
         async function loadContent() {
@@ -104,89 +154,62 @@
                     fetch(SCRIPT_URL + "?type=directory")
                 ]);
 
-                const news = await resNews.json();
+                allNewsData = await resNews.json();
                 const ads = await resAds.json();
                 let dir = await resDir.json();
                 
-                if(news && news.length > 0){
-                    let main = news.find(item => item.kategori.toLowerCase().includes("premium")) || news[0];
-                    const isPremium = main.kategori.toLowerCase().includes("premium");
-                    
+                if(allNewsData && allNewsData.length > 0){
+                    let main = allNewsData.find(item => item.kategori.toLowerCase().includes("premium")) || allNewsData[0];
                     document.getElementById('headline-container').onclick = () => {
                         recordView('trending', main.judul);
                         window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
                     };
-
                     document.getElementById('headline-container').innerHTML = `
                         <img src="${main.gambar}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         <div class="absolute bottom-0 p-6 news-gradient w-full text-white">
-                            <span class="${isPremium ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase">${isPremium ? '⭐ SPONSORED' : 'TERKINI'}</span>
+                            <span class="${main.kategori.toLowerCase().includes('premium') ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase tracking-widest">TERKINI</span>
                             <h3 class="text-2xl font-bold leading-tight">${main.judul}</h3>
-                            <p class="text-[10px] opacity-70 mt-1 italic">👁️ ${main.views || 0} dilihat</p>
+                            <p class="text-[10px] opacity-70 mt-2 italic">⏱️ 3 mnt baca • 👁️ ${main.views || 0} dilihat</p>
                         </div>`;
                     
-                    let listHtml = '';
-                    news.filter(item => item.judul !== main.judul).slice(0, 3).forEach(item => {
-                        listHtml += `
-                        <div onclick="recordView('trending', '${item.judul.replace(/'/g, "\\'")}'); window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 cursor-pointer transition border border-gray-100 text-left">
-                            <img src="${item.gambar}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
-                            <div class="flex flex-col justify-center">
-                                <span class="text-blue-600 text-[10px] font-bold uppercase tracking-tighter">${item.kategori}</span>
-                                <h4 class="font-bold text-sm leading-snug line-clamp-2 text-slate-800">${item.judul}</h4>
-                            </div>
-                        </div>`;
-                    });
-                    document.getElementById('news-list-container').innerHTML = listHtml;
+                    renderNewsList(allNewsData.filter(i => i.judul !== main.judul));
                 }
                 
                 if(ads && ads.Beranda_Tengah) {
                     document.getElementById('ad-home').innerHTML = `<a href="${ads.Beranda_Tengah.link}" target="_blank" class="block overflow-hidden rounded-2xl shadow-xl transition hover:opacity-90"><img src="${ads.Beranda_Tengah.image}" class="w-full h-auto object-cover"></a>`;
                 }
 
-                if(dir && dir.length > 0) {
-                    dir.sort((a, b) => {
-                        let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
-                        let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
-                        let isAPremium = ra > 5.0;
-                        let isBPremium = rb > 5.0;
-                        if (isAPremium && !isBPremium) return -1;
-                        if (!isAPremium && isBPremium) return 1;
-                        return rb - ra; 
-                    });
-
-                    let dirHtml = '';
-                    dir.slice(0, 4).forEach(item => {
-                        let raw = String(item.rating || "0").replace(',', '.').trim();
-                        let r = parseFloat(raw) || 0;
-                        if (r > 10) r = parseFloat(raw.substring(0, 3)) || 4.5;
-
-                        const isPremiumDir = r > 5.0; 
-                        
-                        dirHtml += `
-                        <div class="rounded-2xl shadow-sm hover:shadow-xl transition group border-2 ${isPremiumDir ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} flex flex-col h-full overflow-hidden text-center">
-                            <div class="relative h-44 overflow-hidden">
-                                <img src="${item.foto}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm uppercase italic">
-                                    ${isPremiumDir ? '⭐️ PREMIUM' : '⭐ ' + r.toFixed(1)}
-                                </div>
-                            </div>
-                            <div class="p-4 flex flex-col flex-grow">
-                                <span class="text-blue-500 text-[10px] font-extrabold uppercase tracking-widest">${item.jenis}</span>
-                                <h3 class="font-bold text-slate-800 text-lg mb-1 group-hover:text-blue-700 transition">${item.nama}</h3>
-                                <p class="text-gray-500 text-xs mb-4 line-clamp-2 italic leading-relaxed">"${item.desc}"</p>
+                function renderDir(data) {
+                    let h = '';
+                    data.slice(0, 4).forEach(item => {
+                        let r = parseFloat(String(item.rating).replace(',','.')) || 4.5;
+                        h += `<div class="rounded-2xl shadow-sm border-2 ${r > 5 ? 'border-yellow-400 bg-yellow-50' : 'border-gray-100 bg-white'} overflow-hidden flex flex-col h-full text-center">
+                            <img src="${item.foto}" class="h-44 w-full object-cover">
+                            <div class="p-4 flex-grow flex flex-col">
+                                <span class="text-blue-500 text-[10px] font-extrabold uppercase">${item.jenis}</span>
+                                <h3 class="font-bold text-slate-800 text-lg mb-1">${item.nama}</h3>
+                                <p class="text-gray-500 text-xs mb-4 line-clamp-2 italic">"${item.desc}"</p>
                                 <div class="mt-auto flex justify-between items-center">
-                                    <a href="${item.maps}" target="_blank" onclick="recordView('directory', '${item.nama.replace(/'/g, "\\'")}')" class="flex-grow text-center ${isPremiumDir ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2.5 rounded-xl text-xs font-bold hover:opacity-80 transition duration-300 mr-2">PETUNJUK LOKASI</a>
+                                    <a href="${item.maps}" target="_blank" class="flex-grow text-center ${r > 5 ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2 rounded-xl text-xs font-bold mr-2">MAPS</a>
                                     <span class="text-[9px] text-gray-400 font-bold whitespace-nowrap">👁️ ${item.views || 0}</span>
                                 </div>
                             </div>
                         </div>`;
                     });
-                    document.getElementById('directory-container').innerHTML = dirHtml;
+                    document.getElementById('directory-container').innerHTML = h;
                 }
+                renderDir(dir);
+
+                document.getElementById('biz-search').addEventListener('input', (e) => {
+                    const val = e.target.value.toLowerCase();
+                    const filtered = dir.filter(i => i.nama.toLowerCase().includes(val) || i.jenis.toLowerCase().includes(val));
+                    renderDir(filtered);
+                });
+
                 const overlay = document.getElementById('loading-overlay');
                 overlay.style.opacity = '0';
                 setTimeout(() => overlay.remove(), 500);
-            } catch(e) { console.log(e); }
+            } catch(e) { console.error(e); }
         }
         window.onload = loadContent;
     </script>

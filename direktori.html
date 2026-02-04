@@ -48,6 +48,11 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
         let allData = [];
 
+        // FUNGSI MENCATAT VIEW
+        function recordView(judul) {
+            fetch(`${SCRIPT_URL}?type=incrementView&category=directory&judul=${encodeURIComponent(judul)}`, { mode: 'no-cors' });
+        }
+
         async function loadAllDirectory() {
             try {
                 const [resDir, resAds] = await Promise.all([
@@ -57,7 +62,6 @@
                 allData = await resDir.json();
                 const ads = await resAds.json();
                 
-                // LOGIKA SORTING: PREMIUM SELALU DI ATAS
                 allData.sort((a, b) => {
                     let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
                     let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
@@ -100,11 +104,7 @@
             data.forEach((item, index) => {
                 let raw = String(item.rating || "0").replace(',', '.').trim();
                 let r = parseFloat(raw) || 0;
-                
-                // Proteksi data rusak format tanggal
-                if (r > 10) { 
-                    r = parseFloat(raw.substring(0, 3)) || 4.5;
-                }
+                if (r > 10) r = parseFloat(raw.substring(0, 3)) || 4.5;
 
                 const isPremium = r > 5.0; 
                 const badgeText = isPremium ? "⭐️ PREMIUM PARTNER" : `⭐ ${r.toFixed(1)}`;
@@ -124,8 +124,12 @@
                         <span class="text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-1">${item.jenis}</span>
                         <h3 class="font-extrabold text-xl text-slate-800 mb-2 leading-tight">${item.nama}</h3>
                         <p class="text-gray-500 text-sm italic mb-6 leading-relaxed">"${item.desc}"</p>
-                        <div class="mt-auto">
-                            <a href="${item.maps}" target="_blank" class="w-full flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition">BUKALOKASI (MAPS)</a>
+                        <div class="mt-auto flex justify-between items-center">
+                            <a href="${item.maps}" target="_blank" onclick="recordView('${item.nama.replace(/'/g, "\\'")}')" class="flex-grow flex items-center justify-center gap-2 ${isPremium ? 'bg-yellow-500' : 'bg-slate-800'} text-white py-3.5 rounded-2xl text-xs font-bold hover:opacity-90 transition mr-3">BUKALOKASI (MAPS)</a>
+                            <div class="text-right">
+                                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Dilihat</p>
+                                <p class="text-xs font-black text-slate-700">${item.views || 0}</p>
+                            </div>
                         </div>
                     </div>
                 </div>`;

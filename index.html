@@ -68,6 +68,11 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
         
+        // FUNGSI BARU: MENCATAT VIEWS
+        function recordView(category, judul) {
+            fetch(`${SCRIPT_URL}?type=incrementView&category=${category}&judul=${encodeURIComponent(judul)}`, { mode: 'no-cors' });
+        }
+
         async function loadContent() {
             try {
                 const [resNews, resAds, resDir] = await Promise.all([
@@ -83,18 +88,24 @@
                 if(news && news.length > 0){
                     let main = news.find(item => item.kategori.toLowerCase().includes("premium")) || news[0];
                     const isPremium = main.kategori.toLowerCase().includes("premium");
-                    document.getElementById('headline-container').onclick = () => window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
+                    
+                    document.getElementById('headline-container').onclick = () => {
+                        recordView('trending', main.judul); // Catat View
+                        window.location.href=`baca.html?judul=${encodeURIComponent(main.judul)}`;
+                    };
+
                     document.getElementById('headline-container').innerHTML = `
                         <img src="${main.gambar}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                         <div class="absolute bottom-0 p-6 news-gradient w-full text-white">
                             <span class="${isPremium ? 'bg-yellow-500 text-blue-900' : 'bg-red-600 text-white'} text-[10px] px-2 py-1 rounded mb-2 inline-block font-bold uppercase">${isPremium ? '⭐ SPONSORED' : 'TERKINI'}</span>
                             <h3 class="text-2xl font-bold leading-tight">${main.judul}</h3>
+                            <p class="text-[10px] opacity-70 mt-1 italic">👁️ ${main.views || 0} dilihat</p>
                         </div>`;
                     
                     let listHtml = '';
                     news.filter(item => item.judul !== main.judul).slice(0, 3).forEach(item => {
                         listHtml += `
-                        <div onclick="window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 cursor-pointer transition border border-gray-100 text-left">
+                        <div onclick="recordView('trending', '${item.judul.replace(/'/g, "\\'")}'); window.location.href='baca.html?judul=${encodeURIComponent(item.judul)}'" class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 cursor-pointer transition border border-gray-100 text-left">
                             <img src="${item.gambar}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
                             <div class="flex flex-col justify-center">
                                 <span class="text-blue-600 text-[10px] font-bold uppercase tracking-tighter">${item.kategori}</span>
@@ -110,7 +121,6 @@
                 }
 
                 if(dir && dir.length > 0) {
-                    // LOGIKA SORTING: PREMIUM SELALU DI ATAS
                     dir.sort((a, b) => {
                         let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
                         let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
@@ -125,11 +135,7 @@
                     dir.slice(0, 4).forEach(item => {
                         let raw = String(item.rating || "0").replace(',', '.').trim();
                         let r = parseFloat(raw) || 0;
-                        
-                        // Proteksi data rusak format tanggal
-                        if (r > 10) { 
-                            r = parseFloat(raw.substring(0, 3)) || 4.5;
-                        }
+                        if (r > 10) r = parseFloat(raw.substring(0, 3)) || 4.5;
 
                         const isPremiumDir = r > 5.0; 
                         
@@ -145,8 +151,9 @@
                                 <span class="text-blue-500 text-[10px] font-extrabold uppercase tracking-widest">${item.jenis}</span>
                                 <h3 class="font-bold text-slate-800 text-lg mb-1 group-hover:text-blue-700 transition">${item.nama}</h3>
                                 <p class="text-gray-500 text-xs mb-4 line-clamp-2 italic leading-relaxed">"${item.desc}"</p>
-                                <div class="mt-auto">
-                                    <a href="${item.maps}" target="_blank" class="block text-center ${isPremiumDir ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2.5 rounded-xl text-xs font-bold hover:opacity-80 transition duration-300">PETUNJUK LOKASI</a>
+                                <div class="mt-auto flex justify-between items-center">
+                                    <a href="${item.maps}" target="_blank" onclick="recordView('directory', '${item.nama.replace(/'/g, "\\'")}')" class="flex-grow text-center ${isPremiumDir ? 'bg-yellow-500 text-white' : 'bg-slate-100 text-slate-700'} py-2.5 rounded-xl text-xs font-bold hover:opacity-80 transition duration-300 mr-2">PETUNJUK LOKASI</a>
+                                    <span class="text-[9px] text-gray-400 font-bold whitespace-nowrap">👁️ ${item.views || 0}</span>
                                 </div>
                             </div>
                         </div>`;

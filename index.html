@@ -27,7 +27,7 @@
 
     <div id="loading-overlay" class="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-        <p class="text-slate-500 font-bold animate-pulse uppercase tracking-widest text-xs">Memuat Konten Mojosari...</p>
+        <p class="text-slate-500 font-bold animate-pulse uppercase tracking-widest text-xs">Memuat Data Mojosari...</p>
     </div>
 
     <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
@@ -64,14 +64,15 @@
     </section>
 
     <div class="container mx-auto mt-10 px-4">
+        <div id="ad-home" class="w-full h-24 bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 text-xs font-bold uppercase tracking-widest mb-6">
+            Slot Iklan Mojosari Hub
+        </div>
+        
         <div class="relative mb-6">
             <input type="text" id="biz-search" placeholder="Cari layanan, toko, atau kuliner di Mojosari..." class="w-full bg-white border-2 border-slate-200 py-4 pl-12 pr-4 rounded-2xl shadow-sm focus:border-blue-500 outline-none transition text-sm">
             <svg class="absolute left-4 top-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-        </div>
-        <div id="ad-home" class="w-full h-24 bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300 text-xs font-bold uppercase tracking-widest">
-            Slot Iklan Mojosari Hub
         </div>
     </div>
 
@@ -125,7 +126,6 @@
             if(data.length === 0) {
                 listHtml = `<p class="text-gray-400 text-xs py-10 italic">Belum ada berita di kategori ini.</p>`;
             } else {
-                // Dibatasi hanya 3 berita agar tidak panjang ke bawah
                 data.slice(0, 3).forEach(item => {
                     listHtml += `
                     <div class="bg-white p-3 rounded-xl shadow-sm hover:shadow-md flex gap-4 transition border border-gray-100 text-left relative group">
@@ -180,7 +180,6 @@
                 }
 
                 function renderDir(data) {
-                    // SORTING: Pastikan Premium (Rating > 5) muncul paling atas
                     data.sort((a, b) => {
                         let ra = parseFloat(String(a.rating).replace(',','.')) || 0;
                         let rb = parseFloat(String(b.rating).replace(',','.')) || 0;
@@ -188,7 +187,6 @@
                     });
 
                     let h = '';
-                    // Tampilkan hanya 4 bisnis terbaik/premium di halaman utama
                     data.slice(0, 4).forEach(item => {
                         let r = parseFloat(String(item.rating).replace(',','.')) || 4.5;
                         const isPrem = r > 5.0;

@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-616XBMEMS7"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-616XBMEMS7');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -21,63 +12,350 @@
     <meta property="og:url" id="og-url" content="">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'luxury': {
+                            900: '#0a0a0a',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            gold: '#D4AF37',
+                            'gold-light': '#F4E8C1',
+                            cream: '#FAF9F6',
+                            charcoal: '#36454F'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        .share-btn:hover { transform: translateY(-2px); }
+        /* Glassmorphism Effects */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Premium Typography */
+        .text-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E8C1 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Article Content Styling */
+        .article-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #36454F;
+            font-size: 1.125rem;
+        }
+        
+        .article-content p:first-of-type::first-letter {
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #D4AF37;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF9F6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        
+        /* Share Button Animations */
+        .share-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Image Hover */
+        .img-zoom {
+            overflow: hidden;
+        }
+        .img-zoom img {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .img-zoom:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Loader */
+        .loader-luxury {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #D4AF37;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .loader-luxury::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: #1a1a1a;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #D4AF37, #F4E8C1);
+            z-index: 100;
+            transition: width 0.1s;
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-slate-900">
-    <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-tight uppercase">MOJOSARI<span class="text-yellow-400">HUB</span></a>
-            <a href="index.html" class="bg-blue-800 px-4 py-2 rounded-lg text-sm font-bold shadow-inner">← Kembali</a>
+<body class="bg-luxury-cream font-sans text-luxury-800 antialiased selection:bg-luxury-gold selection:text-white">
+
+    <!-- Reading Progress Bar -->
+    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+
+    <!-- Glass Navigation -->
+    <header class="fixed w-full top-0 z-50 glass-panel border-b border-white/40">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Back Button & Logo -->
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="w-10 h-10 rounded-full bg-luxury-900/5 flex items-center justify-center hover:bg-luxury-gold hover:text-white transition-all duration-300 text-luxury-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                    </a>
+                    <a href="index.html" class="flex flex-col">
+                        <span class="text-xl font-serif font-bold text-luxury-900 tracking-tight">MOJOSARI<span class="text-luxury-gold">HUB</span></span>
+                        <span class="text-[9px] uppercase tracking-[0.2em] text-luxury-charcoal/60">Portal Berita Premium</span>
+                    </a>
+                </div>
+
+                <!-- Article Meta -->
+                <div class="hidden md:flex items-center gap-6">
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase tracking-widest text-luxury-charcoal/40">Kategori</p>
+                        <p class="text-sm font-bold text-luxury-gold" id="header-category">Memuat...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto mt-8 px-4 max-w-3xl mb-24">
-        <article id="article-content">
-            <div class="animate-pulse flex flex-col gap-4">
-                <div class="h-8 bg-gray-200 rounded w-3/4"></div>
-                <div class="h-64 bg-gray-200 rounded"></div>
-                <div class="h-4 bg-gray-200 rounded w-full"></div>
+    <!-- Hero Article Section -->
+    <section class="relative pt-32 pb-12 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-gradient-to-br from-luxury-cream via-white to-luxury-gold-light/20"></div>
+        <div class="absolute top-20 right-0 w-[600px] h-[600px] bg-luxury-gold/10 rounded-full blur-3xl"></div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-8">
+            <!-- Category Badge -->
+            <div class="mb-6">
+                <span id="article-category" class="inline-block px-4 py-2 rounded-full glass-panel text-luxury-gold text-xs font-bold uppercase tracking-[0.2em] border border-luxury-gold/30">
+                    Memuat Kategori...
+                </span>
+            </div>
+            
+            <!-- Title -->
+            <h1 id="article-title" class="font-serif text-4xl md:text-6xl font-bold text-luxury-900 leading-tight mb-8">
+                Memuat Judul Artikel...
+            </h1>
+            
+            <!-- Meta Info -->
+            <div class="flex items-center gap-6 text-luxury-charcoal/60 mb-10 pb-10 border-b border-luxury-gold/20">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <span class="text-sm font-medium"><span id="view-count">0</span> dilihat</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-sm font-medium" id="read-time">3 menit baca</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Article Image -->
+    <section class="relative -mt-6 mb-16">
+        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            <div id="article-image-container" class="relative rounded-3xl overflow-hidden shadow-2xl img-zoom">
+                <div class="animate-pulse bg-luxury-200 aspect-video w-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Content -->
+    <main class="max-w-3xl mx-auto px-6 lg:px-8 mb-24">
+        <article id="article-content" class="article-content mb-16">
+            <!-- Loading State -->
+            <div class="space-y-6">
+                <div class="h-4 bg-luxury-200 rounded w-full animate-pulse"></div>
+                <div class="h-4 bg-luxury-200 rounded w-5/6 animate-pulse"></div>
+                <div class="h-4 bg-luxury-200 rounded w-4/6 animate-pulse"></div>
+                <div class="h-32 bg-luxury-200 rounded w-full animate-pulse"></div>
+                <div class="h-4 bg-luxury-200 rounded w-full animate-pulse"></div>
+                <div class="h-4 bg-luxury-200 rounded w-5/6 animate-pulse"></div>
             </div>
         </article>
 
-        <div class="flex flex-col sm:flex-row items-center gap-4 my-10 p-6 bg-white rounded-3xl border border-gray-100 shadow-sm">
-            <div class="text-center sm:text-left">
-                <p class="text-xs font-black text-blue-600 uppercase tracking-widest mb-1">Ayo Viralkan!</p>
-                <p class="text-sm text-gray-500 font-medium">Bagikan info ini ke warga Mojosari lainnya</p>
-            </div>
-            <div class="flex gap-3 ml-auto">
-                <button onclick="shareFB()" class="share-btn flex items-center gap-2 bg-[#1877F2] text-white px-5 py-3 rounded-2xl text-sm font-bold transition shadow-lg shadow-blue-100">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    Facebook
-                </button>
-                <button onclick="shareWA()" class="share-btn flex items-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-2xl text-sm font-bold transition shadow-lg shadow-green-100">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.27 9.27 0 01-4.487-1.159l-.323-.192-3.33.874.889-3.243-.21-.334a9.272 9.272 0 01-1.428-4.94c0-5.11 4.154-9.264 9.265-9.264 2.476 0 4.804.965 6.554 2.716a9.204 9.204 0 012.712 6.55c0 5.113-4.155 9.267-9.267 9.267m9.065-17.74a10.911 10.911 0 00-7.744-3.207c-6.042 0-10.957 4.916-10.958 10.958 0 1.93.493 3.813 1.43 5.498L3.083 21.6l4.244-1.113a10.925 10.925 0 005.42 1.431h.005c6.043 0 10.958-4.917 10.958-10.959a10.89 10.89 0 00-3.201-7.734"/></svg>
-                    WhatsApp
-                </button>
+        <!-- Share Section -->
+        <div class="glass-panel rounded-3xl p-8 mb-16">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-center md:text-left">
+                    <p class="text-luxury-gold text-xs font-black uppercase tracking-[0.2em] mb-2">Bagikan Artikel</p>
+                    <p class="text-lg text-luxury-charcoal font-medium">Sebarkan informasi berharga ini ke komunitas Anda</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="shareFB()" class="share-btn flex items-center gap-3 bg-[#1877F2] text-white px-6 py-4 rounded-2xl font-bold transition shadow-lg shadow-blue-100/50">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                    </button>
+                    <button onclick="shareWA()" class="share-btn flex items-center gap-3 bg-[#25D366] text-white px-6 py-4 rounded-2xl font-bold transition shadow-lg shadow-green-100/50">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.27 9.27 0 01-4.487-1.159l-.323-.192-3.33.874.889-3.243-.21-.334a9.272 9.272 0 01-1.428-4.94c0-5.11 4.154-9.264 9.265-9.264 2.476 0 4.804.965 6.554 2.716a9.204 9.204 0 012.712 6.55c0 5.113-4.155 9.267-9.267 9.267m9.065-17.74a10.911 10.911 0 00-7.744-3.207c-6.042 0-10.957 4.916-10.958 10.958 0 1.93.493 3.813 1.43 5.498L3.083 21.6l4.244-1.113a10.925 10.925 0 005.42 1.431h.005c6.043 0 10.958-4.917 10.958-10.959a10.89 10.89 0 00-3.201-7.734"/></svg>
+                        WhatsApp
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div id="ad-baca" class="my-10">
-            <div class="animate-pulse h-32 bg-gray-100 rounded-xl"></div>
+        <!-- Advertisement -->
+        <div id="ad-baca" class="mb-16">
+            <div class="glass-panel rounded-2xl p-1">
+                <div class="h-40 bg-luxury-200 rounded-xl animate-pulse flex items-center justify-center">
+                    <span class="text-luxury-charcoal/40 text-xs font-bold uppercase tracking-widest">Memuat Iklan...</span>
+                </div>
+            </div>
         </div>
 
-        <hr class="border-gray-200 my-10">
-        
-        <h3 class="text-xl font-black mb-6 uppercase tracking-tight text-slate-800 italic">📚 Baca Juga</h3>
-        <div id="arsip-container" class="grid grid-cols-1 gap-4 mb-20">
+        <!-- Related Articles -->
+        <div class="mb-12">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="font-serif text-3xl font-bold text-luxury-900">
+                    Baca <span class="italic text-luxury-charcoal/60">Juga</span>
+                </h3>
+                <a href="index.html" class="text-luxury-gold text-sm font-bold hover:underline flex items-center gap-1">
+                    Lihat Semua
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
             </div>
+            <div id="arsip-container" class="grid grid-cols-1 gap-6">
+                <!-- Loading State -->
+                <div class="glass-card rounded-2xl p-4 flex gap-4 items-center animate-pulse">
+                    <div class="w-24 h-24 bg-luxury-200 rounded-xl flex-shrink-0"></div>
+                    <div class="flex-1 space-y-3">
+                        <div class="h-3 bg-luxury-200 rounded w-1/4"></div>
+                        <div class="h-5 bg-luxury-200 rounded w-3/4"></div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 flex gap-4 items-center animate-pulse">
+                    <div class="w-24 h-24 bg-luxury-200 rounded-xl flex-shrink-0"></div>
+                    <div class="flex-1 space-y-3">
+                        <div class="h-3 bg-luxury-200 rounded w-1/4"></div>
+                        <div class="h-5 bg-luxury-200 rounded w-3/4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-slate-800 text-slate-400 py-8 text-center text-xs border-t-4 border-yellow-400">
-        <p class="font-bold text-white mb-2">MOJOSARI HUB</p>
-        <p>© 2026 Portal Informasi Terpadu Mojosari</p>
+    <!-- Premium Footer -->
+    <footer class="bg-luxury-900 text-white relative overflow-hidden">
+        <!-- Top Border Gradient -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-luxury-gold via-luxury-gold-light to-luxury-gold"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-luxury-900 font-serif font-bold text-lg">M</span>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-xl font-bold tracking-tight">MOJOSARI<span class="text-luxury-gold">HUB</span></h3>
+                        <p class="text-white/40 text-[10px] uppercase tracking-widest">Premium Local Directory</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-8 text-white/60 text-sm">
+                    <a href="index.html" class="hover:text-luxury-gold transition-colors">Beranda</a>
+                    <a href="direktori.html" class="hover:text-luxury-gold transition-colors">Direktori</a>
+                    <a href="#" class="hover:text-luxury-gold transition-colors">Tentang</a>
+                </div>
+                
+                <p class="text-white/40 text-xs">&copy; 2026 Mojosari Hub. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0uZJ3Frb0n006Tt9KSDEFAbLhhwigLT9WhfbjUmO4Wd01A4vD3H6D6CAjA2Md89CA/exec";
         
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+
         async function loadPage() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -86,53 +364,108 @@
                 const data = await res.json();
                 
                 const art = data.find(i => i.judul === judulTarget);
+                
                 if(art){
-                    // Update Konten HTML
+                    // Update Header Meta
+                    document.getElementById('header-category').textContent = art.kategori;
+                    document.getElementById('article-category').textContent = art.kategori;
+                    document.getElementById('view-count').textContent = art.views || 0;
+                    
+                    // Calculate read time (rough estimate: 200 words per minute)
+                    const wordCount = art.isi.split(/\s+/).length;
+                    const readTime = Math.ceil(wordCount / 200);
+                    document.getElementById('read-time').textContent = `${readTime} menit baca`;
+                    
+                    // Update Title
+                    document.getElementById('article-title').textContent = art.judul;
+                    
+                    // Update Image
+                    document.getElementById('article-image-container').innerHTML = `
+                        <img src="${art.gambar}" class="w-full aspect-video object-cover" alt="${art.judul}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-luxury-900/30 to-transparent pointer-events-none"></div>
+                    `;
+                    
+                    // Update Content
                     document.getElementById('article-content').innerHTML = `
-                        <div class="mb-4">
-                            <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded font-black uppercase tracking-widest">${art.kategori}</span>
-                        </div>
-                        <h1 class="text-3xl md:text-4xl font-black leading-tight text-slate-900 mb-6">${art.judul}</h1>
-                        <img src="${art.gambar}" class="w-full rounded-3xl shadow-2xl mb-8 object-cover max-h-[450px]">
-                        <div class="text-lg leading-relaxed text-slate-700 space-y-4">
-                            ${art.isi.split('\n').map(p => `<p>${p}</p>`).join('')}
+                        <div class="article-content text-lg leading-relaxed text-luxury-charcoal space-y-6">
+                            ${art.isi.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('')}
                         </div>
                     `;
 
-                    // Update Meta Tags Dinamis (Untuk Share)
+                    // Update Meta Tags for Social Share
                     document.title = `${art.judul} - Mojosari Hub`;
                     document.getElementById('og-title').content = art.judul;
                     document.getElementById('og-image').content = art.gambar;
                     document.getElementById('og-url').content = window.location.href;
                 }
 
-                // Load Arsip (Berita selain yang sedang dibaca)
+                // Load Related Articles
                 let arsipHtml = '';
-                data.filter(i => i.judul !== judulTarget).slice(0, 5).forEach(i => {
+                const relatedArticles = data.filter(i => i.judul !== judulTarget).slice(0, 4);
+                
+                relatedArticles.forEach((i, index) => {
                     arsipHtml += `
-                    <div onclick="location.href='baca.html?judul=${encodeURIComponent(i.judul)}'" class="flex gap-4 bg-white p-3 rounded-2xl shadow-sm hover:shadow-md cursor-pointer transition border border-gray-100 items-center">
-                        <img src="${i.gambar}" class="w-20 h-20 object-cover rounded-xl shadow-inner">
-                        <div>
-                            <span class="text-blue-500 text-[10px] font-bold uppercase">${i.kategori}</span>
-                            <h4 class="font-bold text-slate-800 text-sm leading-snug line-clamp-2">${i.judul}</h4>
+                    <div onclick="location.href='baca.html?judul=${encodeURIComponent(i.judul)}'" 
+                         class="glass-card rounded-2xl p-4 flex gap-5 items-center group cursor-pointer">
+                        <div class="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 img-zoom">
+                            <img src="${i.gambar}" class="w-full h-full object-cover" alt="${i.judul}">
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-luxury-gold text-[10px] font-bold uppercase tracking-wider">${i.kategori}</span>
+                                <span class="text-luxury-charcoal/30">•</span>
+                                <span class="text-luxury-charcoal/40 text-[10px]">${i.views || 0} views</span>
+                            </div>
+                            <h4 class="font-serif text-lg font-bold text-luxury-900 line-clamp-2 leading-snug group-hover:text-luxury-gold transition-colors">
+                                ${i.judul}
+                            </h4>
+                        </div>
+                        <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
+                            <div class="w-10 h-10 rounded-full bg-luxury-gold/10 flex items-center justify-center text-luxury-gold">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </div>
                         </div>
                     </div>`;
                 });
-                document.getElementById('arsip-container').innerHTML = arsipHtml;
+                
+                document.getElementById('arsip-container').innerHTML = arsipHtml || `
+                    <div class="text-center py-12">
+                        <p class="text-luxury-charcoal/60">Tidak ada artikel terkait.</p>
+                    </div>
+                `;
 
-                // Load Iklan Khusus Halaman Baca
+                // Load Advertisement
                 const resAds = await fetch(SCRIPT_URL + "?type=ads");
                 const ads = await resAds.json();
                 if(ads.Baca_Bawah) {
                     document.getElementById('ad-baca').innerHTML = `
                         <a href="${ads.Baca_Bawah.link}" target="_blank" class="block group">
-                            <img src="${ads.Baca_Bawah.image}" class="w-full rounded-2xl shadow-lg group-hover:opacity-90 transition">
+                            <div class="glass-panel rounded-2xl p-1 overflow-hidden">
+                                <img src="${ads.Baca_Bawah.image}" class="w-full h-auto rounded-xl opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+                            </div>
                         </a>`;
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error(e); 
+                document.getElementById('article-content').innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-serif text-2xl text-luxury-900 mb-2">Gagal Memuat Artikel</h3>
+                        <p class="text-luxury-charcoal/60 mb-6">Silakan coba lagi nanti.</p>
+                        <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 bg-luxury-gold text-white rounded-full font-bold hover:bg-luxury-900 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                            Kembali ke Beranda
+                        </a>
+                    </div>
+                `;
+            }
         }
 
-        // Fungsi Share
+        // Share Functions
         function shareFB() {
             const url = window.location.href;
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
@@ -140,7 +473,7 @@
 
         function shareWA() {
             const url = window.location.href;
-            const text = `Wajib baca nih! Info terbaru dari Mojosari: ${url}`;
+            const text = `Wajib baca nih! Info terbaru dari Mojosari Hub: ${url}`;
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
